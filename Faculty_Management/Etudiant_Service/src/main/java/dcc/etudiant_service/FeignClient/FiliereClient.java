@@ -19,14 +19,15 @@ import java.util.List;
         name = "Filiere-Service",
         url = "http://localhost:8081/v1/filieres" // URL de  microservice filiere
 )
-@CircuitBreaker(name = "getfilier",fallbackMethod = "Filiere_fallbackMethod")
-//@TimeLimiter(name = "getfilier",fallbackMethod ="Filiere_fallbackMethod")
-//@RateLimiter(name = "getALLfilier",fallbackMethod ="Filiere_fallbackMethod_GA")
-//@Retry(name = "getALLfilier",fallbackMethod ="Filiere_fallbackMethod_GA")
-//@Bulkhead(name = "getALLfilier",fallbackMethod ="Filiere_fallbackMethod_GA")
+@CircuitBreaker(name = "Filiere-Service",fallbackMethod = "Filiere_fallbackMethod")
+//@TimeLimiter(name = "Filiere-Service",fallbackMethod ="Filiere_fallbackMethod")
+//@RateLimiter(name = "Filiere-Servicer",fallbackMethod ="Filiere_fallbackMethod_GA")
+//@Retry(name = "Filiere-Service",fallbackMethod ="Filiere_fallbackMethod_GA")
+//@Bulkhead(name = "Filiere-Service",fallbackMethod ="Filiere_fallbackMethod_GA")
 
 //@Cacheable(value = "filiere-cache", key = "#id")
 public interface FiliereClient {
+
 
     @GetMapping("/{id}")
     public Filiere getFiliereById(@PathVariable("id") Integer id);

@@ -1,0 +1,29 @@
+meta {
+  name: createEtudent
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8888/ETUDIANT-SERVICE/v1/etudiants
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJTZWN1cml0eV9TZXJ2aWNlIiwic3ViIjoidXNlcjEiLCJleHAiOjE3NjQ2MjAxOTEsImlhdCI6MTc2NDYyMDA3MSwic2NvcGUiOiJVU0VSIn0.Xj_pjZj0KP_kR-Ac4J9-MCiCoAXrRJsUH0_is6yyvGYfgTMeDDaTx6xLb-287uyFhfWZHb00Ezd5nGpYr794ypuiezgCf-W65YVyZ6-lDKQlrW4EwHlneGowOxmwwcDeOkOzwuGE52KHEQhWxojt7cVXTeyLsoA9NA8jiJfLQX8i3QTkB_f4tvlQ-C5VMOSijlxTr9Vx8vRl_fKfD_bi1c3MyM0Iw04J9sDPs-j2O6-7l-1RaXtZgCYEcbLd80tFBSKdbCsyPrNiWfj_15R1MZUdOzm6pfPKLu1wUb_BgGdAjDlfBxKQfg-RYU3dPl0DT60GX8OBxVQpZwbeZcx93w
+}
+
+body:json {
+  {
+    "nom" : "el ghiouan",
+     "prenom" : "fati",
+      "cne" : "LB1234",
+     "idFiliere" : 1
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

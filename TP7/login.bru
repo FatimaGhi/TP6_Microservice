@@ -1,0 +1,21 @@
+meta {
+  name: login
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8888/SECURITY-SERVICE/login
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  username: user1
+  password: 1234
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

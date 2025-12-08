@@ -19,10 +19,10 @@ import java.util.List;
         name = "Filiere-Service",
         url = "http://localhost:8081/v1/filieres" // URL de  microservice filiere
 )
-@CircuitBreaker(name = "Filiere-Service",fallbackMethod = "Filiere_fallbackMethod")
+//@CircuitBreaker(name = "Filiere-Service",fallbackMethod = "Filiere_fallbackMethod")
 //@TimeLimiter(name = "Filiere-Service",fallbackMethod ="Filiere_fallbackMethod")
 //@RateLimiter(name = "Filiere-Servicer",fallbackMethod ="Filiere_fallbackMethod_GA")
-//@Retry(name = "Filiere-Service",fallbackMethod ="Filiere_fallbackMethod_GA")
+@Retry(name = "Filiere-Service",fallbackMethod ="Filiere_fallbackMethod")
 //@Bulkhead(name = "Filiere-Service",fallbackMethod ="Filiere_fallbackMethod_GA")
 
 //@Cacheable(value = "filiere-cache", key = "#id")
@@ -37,6 +37,7 @@ public interface FiliereClient {
 
 
     default Filiere Filiere_fallbackMethod(Integer id,Exception e){
+        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^ hello");
         return new Filiere(id ,"No_exist","No_exist");
     }
     default List<Filiere> Filiere_fallbackMethod_GA(Integer id,Exception e){

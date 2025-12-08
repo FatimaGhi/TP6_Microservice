@@ -1,0 +1,114 @@
+services:
+
+  faculte-discovery-servise:
+    build: ./Discovery-Service
+    container_name: aculte-discovery-servise
+    ports:
+      - '8761:8761'
+    healthcheck:
+      test: ["CMD","curl","http://localhost:8761/actuator/health"]
+#      for test because service use many time for run
+      interval: 20s
+      retries: 4
+
+
+  faculty-config:
+    build: ./Configuration_Service
+    container_name: faculty-config
+    ports:
+      - '9999:9999'
+    environment:
+      - DISCOVERY-SERVICE-URL=http://faculte-discovery-servise:8761/eurika
+    healthcheck:
+      test: [ "CMD","curl","http://localhost:9999/actuator/health" ]
+      #      for test because service use many time for run
+      interval: 10s
+      retries: 4
+    depends_on:
+       faculte-discovery-servise:
+         condition: service_healthy
+
+  faculty-gateway:
+    build: ./Gateway-Service
+    container_name: faculty-gateway
+    ports:
+      - '8888:8888'
+    environment:
+      - DISCOVERY-SERVICE-URL=http://faculte-discovery-servise:8761/eurika
+    healthcheck:
+      test: [ "CMD","curl","http://localhost:8888/actuator/health" ]
+      #      for test because service use many time for run
+      interval: 10s
+      retries: 4
+    depends_on:
+      faculte-discovery-servise:
+        condition: service_healthy
+
+
+  faculty-security:
+    build: ./Security-Service
+    container_name: faculty-security
+    ports:
+      - '9090:9090'
+    environment:
+      - DISCOVERY-SERVICE-URL=http://faculte-discovery-servise:8761/eurika
+    healthcheck:
+      test: [ "CMD","curl","http://localhost:9090/actuator/health" ]
+      #      for test because service use many time for run
+      interval: 10s
+      retries: 4
+    depends_on:
+      faculte-discovery-servise:
+        condition: service_healthy
+
+
+  #  data base postgres
+  postgres:
+    image: postgres:13.22-alpine3.22
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 2001fati
+      POSTGRES_USER: postgres
+      POSTGRES_DB: faculte
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+
+  faculty-filiere:
+    build: ./Filiere_Service
+    container_name: faculty-filiere
+    ports:
+      - '8081:8081'
+    environment:
+      - DISCOVERY-SERVICE-URL=http://facule-config:9999
+      - DISCOVERY-SERVICE-URL=http://faculte-discovery-servise:8761/eurika
+
+    healthcheck:
+      test: [ "CMD","curl","http://localhost:8081/actuator/health" ]
+      #      for test because service use many time for run
+      interval: 10s
+      retries: 4
+    depends_on:
+      faculty-config:
+        condition: service_healthy
+
+  faculty-etudiant:
+    build: ./Etudiant_Service
+    container_name: faculty_etudiant
+    ports:
+      - '8082:8082'
+    environment:
+      - DISCOVERY-SERVICE-URL=http://facule-config:9999
+      - DISCOVERY-SERVICE-URL=http://faculte-discovery-servise:8761/eurika
+
+    healthcheck:
+      test: [ "CMD","curl","http://localhost:8081/actuator/health" ]
+      #      for test because service use many time for run
+      interval: 10s
+      retries: 4
+    depends_on:
+      faculty-config:
+        condition: service_healthy
+
+volumes:
+  pgdata:

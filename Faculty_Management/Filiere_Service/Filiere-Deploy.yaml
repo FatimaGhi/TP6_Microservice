@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filiere-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filiere-service
+  template:
+    metadata:
+      labels:
+        app: filiere-service
+    spec:
+      containers:
+        - name: filiere-service
+          image: faculty_management-filiere-service:latest
+          ports:
+            - containerPort: 8082
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 4
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: filiere-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: filiere-service
+  ports:
+    - port: 8082
+      targetPort: 8082

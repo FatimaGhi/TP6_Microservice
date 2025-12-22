@@ -1,26 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: filiere-service
+  name: faculty-filiere-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: filiere-service
+      app: faculty-filiere-service
   template:
     metadata:
       labels:
-        app: filiere-service
+        app: faculty-filiere-service
     spec:
       containers:
-        - name: filiere-service
-          image: faculty_management-filiere-service:latest
+        - name: faculty-filiere-service
+          image: faculty_management-faculty-filiere-service:latest
+          imagePullPolicy: Never
           ports:
-            - containerPort: 8082
+            - containerPort: 8081
+          env:
+            - name: DISCOVERY_SERVICE_URL
+              value: http://faculty-discovery-service.default.svc.cluster.local:8761/eureka
+            - name: CONFIG_SERVER_URL
+              value: http://faculty-config-service.default.svc.cluster.local:9999
+
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 8082
+              port: 8081
             initialDelaySeconds: 5
             periodSeconds: 10
             failureThreshold: 4
@@ -28,11 +35,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: filiere-service
+  name: faculty-filiere-service
 spec:
   type: LoadBalancer
   selector:
-    app: filiere-service
+    app: faculty-filiere-service
   ports:
-    - port: 8082
-      targetPort: 8082
+    - port: 8081
+      targetPort: 8081

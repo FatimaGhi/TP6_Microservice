@@ -1,26 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: etudiant-service
+  name: faculty-etudiant-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: etudiant-service
+      app: faculty-etudiant-service
   template:
     metadata:
       labels:
-        app: etudiant-service
+        app: faculty-etudiant-service
     spec:
       containers:
-        - name: etudiant-service
-          image: faculty_management-etudiant-service:latest
+        - name: faculty-etudiant-service
+          image: faculty_management-faculty-etudiant-service:latest
+          imagePullPolicy: Never
           ports:
-            - containerPort: 8081
+            - containerPort: 8082
+          env:
+            - name: DISCOVERY_SERVICE_URL
+              value: http://faculty-discovery-service.default.svc.cluster.local:8761/eureka
+            - name: CONFIG_SERVER_URL
+              value: http://faculty-config-service.default.svc.cluster.local:9999
+
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 8081
+              port: 8082
             initialDelaySeconds: 5
             periodSeconds: 10
             failureThreshold: 4
@@ -28,11 +35,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: etudiant-service
+  name: faculty-etudiant-service
 spec:
   type: LoadBalancer
   selector:
-    app: etudiant-service
+    app: faculty-etudiant-service
   ports:
-    - port: 8081
-      targetPort: 8081
+    - port: 8082
+      targetPort: 8082

@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties(RsaKeys.class)
+@ActiveProfiles("test")
 public class FiliereServiceApplication {
 
     public static void main(String[] args) {

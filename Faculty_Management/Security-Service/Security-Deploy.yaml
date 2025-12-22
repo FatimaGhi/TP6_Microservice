@@ -1,26 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: security-service
+  name: faculty-security-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: security-service
+      app: faculty-security-service
   template:
     metadata:
       labels:
-        app: security-service
+        app: faculty-security-service
     spec:
       containers:
-        - name: security-service
-          image: faculty_management-security-service:latest
+        - name: faculty-security-service
+          image: faculty_management-faculty-security-service:latest
+          imagePullPolicy: Never
           ports:
-            - containerPort: 8083
+            - containerPort: 9090
+          env:
+            - name: DISCOVERY_SERVICE_URL
+              value: http://faculty-discovery-service.default.svc.cluster.local:8761/eureka
+
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 8083
+              port: 9090
             initialDelaySeconds: 5
             periodSeconds: 10
             failureThreshold: 4
@@ -28,11 +33,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: security-service
+  name: faculty-security-service
 spec:
   type: LoadBalancer
   selector:
-    app: security-service
+    app: faculty-security-service
   ports:
-    - port: 8083
-      targetPort: 8083
+    - port: 9090
+      targetPort: 9090

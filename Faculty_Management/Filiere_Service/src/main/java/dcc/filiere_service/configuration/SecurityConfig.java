@@ -29,9 +29,9 @@ public class SecurityConfig {
                 .sessionManagement(sess-> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/actuator/**").permitAll())
 //                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .build();
     }
